@@ -33,6 +33,7 @@
 # define TRACE_DEFAULT_MAXHOPS 	64
 # define TRACE_DEFAULT_MAXTRIES 3
 # define TRACE_DEFAULT_TIMEOUT 	3
+# define TRACE_DEFAULT_BUFSIZE 	64
 
 struct ping_stat
 {
@@ -87,7 +88,8 @@ int ping_recv(struct ping_data *ping);
 int ping_xmit(struct ping_data *ping);
 
 trace_t *trace_init();
-int trace_run(trace_t *trace, char *hostname);
+int trace_run(trace_t *trace, const int hop);
 int trace_xmit(trace_t *trace);
+int trace_recv(trace_t *trace);
 
 #endif
