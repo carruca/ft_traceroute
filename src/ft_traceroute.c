@@ -4,18 +4,6 @@ unsigned g_ping_options = 0;
 int g_stop = 0;
 int g_ttl = 0;
 
-int
-ping_setbuf(struct ping_data *ping, size_t size)
-{
-	if (ping->buffer == NULL)
-	{
-		ping->buffer = malloc(size);
-		if (ping->buffer == NULL)
-			return 1;
-	}
-	return 0;
-}
-
 static error_t
 parse_opt(int key, char *arg,
 	struct argp_state *state)
@@ -105,15 +93,13 @@ main(int argc, char **argv)
 
 	while(!g_stop)
 	{
-		if (hop >= TRACE_DEFAULT_MAXHOPS)
-			break;
+		if (hop > TRACE_DEFAULT_MAXHOPS)
+			exit(EXIT_FAILURE);
 		trace_run(trace, hop);
 		trace_inc_ttl(trace);
 		trace_inc_port(trace);
 		++hop;
 	}
-	close(trace->udpfd);
-	close(trace->icmpfd);
-	free(trace);
-	return 0;
+
+	exit(EXIT_SUCCESS);
 }

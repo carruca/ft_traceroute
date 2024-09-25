@@ -39,7 +39,8 @@ config: $(NAME)
 sanitize: LDFLAGS += $(FSANITIZE)
 sanitize: $(NAME)
 
-tags:
+tag:
+	$(RM) tags
 	ctags $(SRCS)
 
 clean:

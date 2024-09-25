@@ -21,54 +21,22 @@
 # include <signal.h>
 # include <stdlib.h>
 
-# define PING_OPTION_VERBOSE    0x0001
-
-# define PING_DEFAULT_COUNT 		0
-# define PING_DEFAULT_INTERVAL  1000
-# define PING_DEFAULT_DATALEN 	(64 - ICMP_MINLEN)
-# define PING_DEFAULT_MAXTTL 	  255
-
 # define TRACE_DEFAULT_FIRSTHOP 1
 # define TRACE_DEFAULT_UDPPORT 	33434
-# define TRACE_DEFAULT_MAXHOPS 	64
+# define TRACE_DEFAULT_MAXHOPS 	32
 # define TRACE_DEFAULT_MAXTRIES 3
 # define TRACE_DEFAULT_TIMEOUT 	3
 # define TRACE_DEFAULT_BUFSIZE 	64
-
-struct ping_stat
-{
-	double tmin;
-	double tmax;
-	double tsum;
-	double tsumsq;
-};
 
 typedef struct trace
 {
 	int icmpfd;
 	int udpfd;
-	struct sockaddr_in dest_addr;
-	struct sockaddr_in from_addr;
 	int ttl;
 	struct timeval tsent;
-} trace_t;
-
-
-struct ping_data
-{
-	int fd;
-	int type;
-	pid_t id;
-	size_t count;
-	size_t interval;
-	size_t datalen;
-	size_t num_xmit;
-	size_t num_recv;
-	struct ping_stat ping_stat;
 	struct sockaddr_in dest_addr;
 	struct sockaddr_in from_addr;
-	char *buffer;
-};
+} trace_t;
 
 enum {
 	ARG_TTL = 256,
