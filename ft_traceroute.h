@@ -46,14 +46,9 @@ extern unsigned g_ping_options;
 extern int g_stop;
 extern int g_ttl;
 
-size_t ping_cvt_number(const char *arg, size_t maxval);
+size_t trace_cvt_number(const char *arg);
 void tvsub(struct timeval *out, struct timeval *in);
 unsigned short icmp_cksum(char *buffer, size_t bufsize);
-
-struct ping_data *ping_init();
-int ping_run(struct ping_data *ping, char *hostname);
-int ping_recv(struct ping_data *ping);
-int ping_xmit(struct ping_data *ping);
 
 trace_t *trace_init();
 int trace_run(trace_t *trace, const int hop);

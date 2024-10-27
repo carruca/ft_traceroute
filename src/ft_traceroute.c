@@ -3,14 +3,18 @@
 unsigned g_ping_options = 0;
 int g_stop = 0;
 int g_ttl = 0;
+int g_first_ttl = 0;
 
 static error_t
 parse_opt(int key, char *arg,
 	struct argp_state *state)
 {
-	(void)arg;
 	switch(key)
 	{
+		case 'f':
+			g_first_ttl = trace_cvt_number(arg);
+			break;
+
 		case ARGP_KEY_NO_ARGS:
 			argp_error(state, "missing host operand");
 
@@ -64,6 +68,7 @@ main(int argc, char **argv)
 	char args_doc[] = "[OPTION...] HOST";
 	char doc[] = "Print the route packets trace to network host.";
 	struct argp_option argp_options[] = {
+		{"first-hop", 'f', "NUM", 0, "set initial hop distance, i.e., time-to-live", 0},
 		{0}
 	};
 	struct argp argp =
@@ -75,6 +80,9 @@ main(int argc, char **argv)
 	trace = trace_init();
 	if (trace == NULL)
 		exit(EXIT_FAILURE);
+
+	if (g_first_ttl)
+		trace->ttl = g_first_ttl;
 
 	if (setsockopt(trace->udpfd, IPPROTO_IP, IP_TTL, &trace->ttl, sizeof(trace->ttl)) < 0)
 		error(0, errno, "setsockopt");

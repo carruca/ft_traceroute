@@ -25,19 +25,13 @@ tvsub(struct timeval *out, struct timeval *in)
 }
 
 size_t
-ping_cvt_number(const char *arg, size_t maxval)
+trace_cvt_number(const char *arg)
 {
 	char *endptr;
 	unsigned long int n;
 
 	n = strtoul(arg, &endptr, 0);
-	if (*endptr)
-		error(EXIT_FAILURE, 0, "invalid value (`%s' near `%s')", arg, endptr);
-
-	if (n == 0)
-		error(EXIT_FAILURE, 0, "option value too small: %s", arg);
-
-	if (maxval && n > maxval)
-		error(EXIT_FAILURE, 0, "option value too big: %s", arg);
+	if (*endptr || n == 0)
+		error(EXIT_FAILURE, 0, "imposibble distance `%s'", arg);
 	return n;
 }
