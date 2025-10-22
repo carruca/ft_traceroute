@@ -4,6 +4,7 @@ unsigned g_ping_options = 0;
 int g_stop = 0;
 int g_ttl = 0;
 int g_first_ttl = 0;
+int g_max_ttl = TRACE_DEFAULT_MAXHOPS;
 
 static error_t
 parse_opt(int key, char *arg,
@@ -13,6 +14,10 @@ parse_opt(int key, char *arg,
 	{
 		case 'f':
 			g_first_ttl = trace_cvt_number(arg);
+			break;
+
+		case 'm':
+			g_max_ttl = trace_cvt_number(arg);
 			break;
 
 		case ARGP_KEY_NO_ARGS:
@@ -69,10 +74,10 @@ main(int argc, char **argv)
 	char doc[] = "Print the route packets trace to network host.";
 	struct argp_option argp_options[] = {
 		{"first-hop", 'f', "NUM", 0, "set initial hop distance, i.e., time-to-live", 0},
+		{"max-hop", 'm', "NUM", 0, "set maximal hop count (default: 32)", 0},
 		{0}
 	};
-	struct argp argp =
-		{argp_options, parse_opt, args_doc, doc, NULL, NULL, NULL};
+	struct argp argp = {argp_options, parse_opt, args_doc, doc, NULL, NULL, NULL};
 
 	if (argp_parse(&argp, argc, argv, 0, &index, NULL) != 0)
 		return 0;
@@ -101,7 +106,7 @@ main(int argc, char **argv)
 
 	while(!g_stop)
 	{
-		if (hop > TRACE_DEFAULT_MAXHOPS)
+		if (hop > g_max_ttl)
 			exit(EXIT_FAILURE);
 		trace_run(trace, hop);
 		trace_inc_ttl(trace);
