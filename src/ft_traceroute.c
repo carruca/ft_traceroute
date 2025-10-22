@@ -18,6 +18,10 @@ parse_opt(int key, char *arg,
 
 		case 'm':
 			g_max_ttl = trace_cvt_number(arg);
+			if (!g_max_ttl)
+				argp_error(state, "first hop out of range");
+			if (g_max_ttl < 0 || g_max_ttl > 255)
+				argp_error(state, "max hop cannot be more than 255");
 			break;
 
 		case ARGP_KEY_NO_ARGS:
@@ -100,7 +104,7 @@ main(int argc, char **argv)
 	printf("traceroute to %s (%s), %d hops max\n",
 		*argv,
 		inet_ntoa(trace->dest_addr.sin_addr),
-		TRACE_DEFAULT_MAXHOPS);
+		g_max_ttl);
 
 	hop = 1;
 
